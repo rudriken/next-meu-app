@@ -1,19 +1,12 @@
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+export async function getServerSideProps(contexto) {
+    const id = contexto.query.idCurso;
+    const resposta = await fetch("http://localhost:3000/api/cursos/" + id);
+    const dado = await resposta.json();
+    return { props: { curso: dado } };
+}
 
-export default function Cursos() {
-    const rota = useRouter(),
-        id = rota.query.idCurso,
-        [curso, mudarCurso] = useState({});
-
-    useEffect(() => {
-        if (id) {
-            fetch("http://localhost:3000/api/cursos/" + id)
-                .then((resposta) => resposta.json())
-                .then((dado) => mudarCurso(dado));
-        }
-    }, [id]);
-
+export default function Cursos(propriedades) {
+    const { curso } = propriedades;
     if (curso) {
         return (
             <div>
